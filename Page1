@@ -1,0 +1,99 @@
+import tkinter as tk
+import tkinter as ttk
+from tkinter import ttk
+from tkinter import *
+import os
+
+'''
+The Login Page was done by: Sadik Islam
+Student ID: 001067732
+
+The login page will allow the user to enter their username and password 
+and then allow them to proceed to the voting page where they will be able 
+to make their votes
+'''
+'''
+# function that will be used to call the other files when needed
+def app_page():
+    os.system("voting.py")
+'''
+
+def intro_page():
+    os.system("introduction.py")  # change file name to introduction
+
+
+# text file of username and passwords
+user_details = 'StudentVoters.txt'
+
+global enter_name1
+global enter_password1
+global login_page
+
+
+#  prompts new window to be made titled 'Login'
+login_page = Tk()
+login_page.title('Login')
+
+page_title = Label(login_page, text='Please Login\n', fg="blue")
+page_title.grid(sticky=E)
+
+# labels for requesting username and password
+name_label = Label(login_page, text='Username: ')
+name_label.grid(row=1, sticky=W)
+password_label = Label(login_page, text='Password: ')
+password_label.grid(row=2, sticky=W)
+
+# entry boxes for user to input details
+enter_name1 = Entry(login_page)  # textbox for username
+enter_name1.grid(row=1, column=1)
+enter_password1 = Entry(login_page, show='*')  # textbox for password
+enter_password1.grid(row=2, column=1)
+
+
+# function that will check if username and password has been entered correctly
+def checklogin():
+    data = []  # this stores the words from read line from the text file
+    u_name = []
+    p_word = []
+
+    with open('user_details.txt', 'r+') as file:  # 'user_details.txt' is file with user details stored
+        for line in file:
+            s = line.split(',')  # line.split will break the string at comma; username then comma then password
+            data = data + s
+        for j in range(0, len(data), 2):
+            u_name.append(data[j])  # username is before comma
+            p_word.append(data[j+1])  # password is after comma (j+1)
+
+    # assigns the username to password in a dictionary for the login
+    login_dict = {}
+    for i in range(len(u_name)):
+        login_dict[u_name[i]] = p_word[i]
+
+    if enter_name1.get() in u_name:
+
+        if login_dict[enter_name1.get()] == enter_password1.get():
+            page = Tk()
+            page.title('Success')
+            page.geometry('200x200')  # Sets tab to be specified size.
+            button0 = ttk.Button(page, text='\nLogin Successful!',
+                                 command=intro_page)
+            button0.pack()
+
+        else:
+            page = Tk()
+            page.title('No Success')
+            page.geometry('300x200')
+            page.login_fail = Label(page, text='\nLogin successful')
+            page.login_fail.pack()
+
+            page.mainloop()
+        intro_page()
+
+
+# button for the user to click on so they can login
+login_btn = Button(login_page, text='Login', fg="green",
+                   command=checklogin)  # This makes the login button, which will go to the CheckLogin def.
+login_btn.grid(columnspan=2, sticky=W)
+
+login_page.mainloop()
+
